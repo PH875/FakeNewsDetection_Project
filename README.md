@@ -6,7 +6,7 @@
    conda env create -f environment.yml
    ```
 4. Activate the environment:
-```bash
-conda activate fakenews_detection
-```
+   ```bash
+   conda activate fakenews_detection
+   ```
 5. Run the code from this environment

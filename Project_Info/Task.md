@@ -44,6 +44,7 @@ $$
 $$
 
 Then the **TF-IDF score** for term $t$ in document $d$ is:
+
   $$
   \text{tfidf}(t, d, D) = \text{tf}(t, d) \cdot \text{idf}(t, D)
   $$
