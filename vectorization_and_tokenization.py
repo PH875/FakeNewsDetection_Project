@@ -1,7 +1,8 @@
-# Make sure wordnet, the averaged_perceptron_tagger for the used language and stopwords is downloaded from nltk; e.g. use:
+# Make sure wordnet, the averaged_perceptron_tagger for the used language, stopwords and punkt_tab is downloaded from nltk; e.g. use:
 # >>> nltk.download('wordnet')
 # >>> nltk.download('averaged_perceptron_tagger_eng')
 # >>> nltk.download('stopwords')
+# >>> nltk.download('punkt_tab')
 
 import numpy as np
 
