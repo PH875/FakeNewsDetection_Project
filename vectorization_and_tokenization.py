@@ -5,6 +5,7 @@
 # >>> nltk.download('punkt_tab')
 
 import numpy as np
+import scipy.sparse as sp
 
 import nltk
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -163,3 +164,101 @@ def vectorize_text_data(df, col_names,vectorization='tf-idf', max_features_per_c
         X=normalizer(X)
     
     return X, feature_names            
+
+
+
+class multi_column_vectorizer:
+    def __init__(self, col_names,vectorization='tf-idf', max_features_per_column=1000, stop_words=None, ngram_range=(1,1), tokenizer=None, language='english'):
+        self.col_names=col_names
+        self.vectorization=vectorization
+
+        if type(max_features_per_column) is int or max_features_per_column is None:
+            self.max_features_per_column=[max_features_per_column]*len(col_names)
+        else:
+            self.max_features_per_column=max_features_per_column
+
+        self.ngram_range=ngram_range
+        self.tokenizer=None
+        self.language=language
+        
+        if tokenizer is not None:
+            if stop_words=='english':
+                self.stop_words=STOPWORDS_EN
+            else:
+                self.stop_words=stop_words #Use english stopword list from nltk.corpus
+            self.tokenizer=lambda text: tokenizer(text, language=self.language, stop_words=self.stop_words) #set up custom tokenizer
+        else:
+            self.stop_words=stop_words
+            self.tokenizer=None
+        
+        self.vectorizers={}
+
+        for name, max_features in zip(self.col_names, self.max_features_per_column):
+            if self.vectorization=='tf-idf':
+                if self.tokenizer is None:
+                    vectorizer=TfidfVectorizer(max_features=max_features, stop_words=self.stop_words, ngram_range=self.ngram_range)
+                else: 
+                    vectorizer=TfidfVectorizer(max_features=max_features, ngram_range=self.ngram_range,token_pattern=None, tokenizer=self.tokenizer)
+                    
+            elif vectorization=='bag_of_words':
+                if self.tokenizer is None:
+                    vectorizer=CountVectorizer(max_features=max_features, stop_words=self.stop_words, ngram_range=self.ngram_range)
+                else:
+                    vectorizer=CountVectorizer(max_features=max_features, ngram_range=self.ngram_range, token_pattern=None, tokenizer=self.tokenizer)
+            else:
+                raise Exception('Invalid vectorization type.')
+            
+            self.vectorizers[name]=vectorizer
+        
+    def fit_transform(self, df, colnames=None, sparse=True):
+        if colnames is None:
+            colnames=self.col_names
+        X_arrays=[]
+        for name in colnames:
+            if not name in self.col_names:
+                raise Exception(f"No vectorizer for column {name}")
+            elif not name in df.columns:
+                raise Exception(f"No column named {name} in dataframe")
+            
+            corpus=list(df[name])
+            x=self.vectorizers[name].fit_transform(corpus)
+            X_arrays.append(x)
+        
+        X=sp.hstack(X_arrays)
+            
+        if not sparse:
+            X=X.toarray()
+
+        return X
+
+    def transform(self, df, colnames=None, sparse=True):
+        if colnames is None:
+            colnames=self.col_names
+        X_arrays=[]
+        for name in colnames:
+            if not name in self.col_names:
+                raise Exception(f"No vectorizer for column {name}")
+            elif not name in df.columns:
+                raise Exception(f"No column named {name} in dataframe")
+            
+            corpus=list(df[name])
+            x=self.vectorizers[name].transform(corpus)
+            X_arrays.append(x)
+        
+        X=sp.hstack(X_arrays)
+            
+        if not sparse:
+            X=X.toarray()
+
+        return X
+    
+    def get_feature_names(self):
+        feature_names={name:self.vectorizers[name].get_feature_names_out() for name in self.col_names}
+        return feature_names
+            
+
+
+        
+
+
+        
