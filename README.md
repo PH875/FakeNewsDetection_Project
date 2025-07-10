@@ -1,6 +1,6 @@
 ### Setup
 1. Download (and possibly extract) this repository
-2. In the terminal navigate to the downloaded repository
+2. In the terminal, navigate to the downloaded repository
 3. Create the environment using
    ```bash
    conda env create -f environment.yml
@@ -10,3 +10,9 @@
    conda activate fakenews_detection
    ```
 5. Run the code from this environment
+
+
+Notizen: 
+Begründung für z-score normalization
+Courselib Änderungen: LogisticRegression model, LinearSVM model, TrainableModel, normalization, preprocessing
+
