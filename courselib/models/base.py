@@ -1,6 +1,6 @@
 import numpy as np
     
-class TrainableModel_S:
+class TrainableModel:
     """
     Base class for models trained using iterative optimization, adapted for sparse matrix compatibility
     """
