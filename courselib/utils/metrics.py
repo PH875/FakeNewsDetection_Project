@@ -7,8 +7,11 @@ def binary_accuracy(y_pred,y_true, class_labels=[1,-1]):
     pred_labels = np.where(y_pred >= threshold, max(class_labels), min(class_labels))
     return np.mean(pred_labels == y_true)*100
 
-def accuracy(y_pred, y_true):    
-    return np.mean(np.argmax(y_pred,axis=-1) == np.argmax(y_true,axis=-1), axis=0) * 100
+def accuracy(y_pred, y_true, one_hot_encoded_labels=True):    
+    if one_hot_encoded_labels:
+        y_pred = np.argmax(y_pred,axis=-1)
+        y_true = np.argmax(y_true,axis=-1)
+    return np.mean(y_pred == y_true, axis=0) * 100
 
 def mean_squared_error(y_pred,y_true):
     return 0.5*np.mean((y_pred - y_true)**2)

@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.sparse as sp
 import cvxopt
 from .base import TrainableModel
 
@@ -43,11 +44,15 @@ class RBFKernel(Kernel):
 
 class LinearSVM(TrainableModel):
 
-    def __init__(self, w, b, optimizer, C=10.):
+    def __init__(self, w, b, optimizer, C=10., offset=None):
         super().__init__(optimizer)
         self.w = np.array(w, dtype=float)
         self.b = np.array(b, dtype=float)
         self.C = C
+        if offset is None:
+            self.offset=np.zeros(len(w))
+        else:
+            self.offset=offset
     
     def loss_grad(self, X, y):
        # Compute raw model output
@@ -60,7 +65,10 @@ class LinearSVM(TrainableModel):
 
         # Compute 
         if len(y_masked) > 0:
-            grad_w = 2 * self.w - self.C * np.mean(y_masked[:, None] * X_masked, axis=0)
+            if sp.issparse(X_masked):
+                grad_w=2 * self.w - self.C * (np.array(X_masked.multiply(y_masked[:, None]).mean(axis=0)).reshape((-1,))-np.mean(y_masked)*self.offset)
+            else:
+                grad_w = 2 * self.w - self.C * np.mean(y_masked[:, None] * X_masked, axis=0)
             grad_b = - self.C * np.mean(y_masked)
         else:
             grad_b = 0.0
@@ -69,7 +77,7 @@ class LinearSVM(TrainableModel):
         return {"w": grad_w, "b": grad_b}
     
     def decision_function(self, X):
-        return X @ self.w + self.b
+        return X @ self.w -np.dot(self.offset,self.w) + self.b
     
     def _get_params(self):
         return {"w": self.w, "b": self.b}
@@ -143,3 +151,5 @@ class BinaryKernelSVM:
 
     def __call__(self, X):
         return np.where(self.decision_function(X) > 0, 1, -1)
+    
+

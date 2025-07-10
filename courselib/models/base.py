@@ -1,13 +1,12 @@
 import numpy as np
     
-class TrainableModel:
+class TrainableModel_S:
     """
-    Base class for models trained using iterative optimization.
+    Base class for models trained using iterative optimization, adapted for sparse matrix compatibility
     """
     def __init__(self, optimizer):
         self.optimizer = optimizer
-
-    def loss_grad(self, X, y):
+    def loss_grad(self, X, y): 
         """Subclasses must override this to return parameter gradients."""
         raise NotImplementedError
     
@@ -55,8 +54,8 @@ class TrainableModel:
             metrics_history = None
 
         for _ in range(num_epochs):
-            indices = np.random.permutation(len(X))
-            batches = np.array_split(indices, np.ceil(len(X) / batch_size))
+            indices = np.random.permutation(X.shape[0])
+            batches = np.array_split(indices, np.ceil(X.shape[0] / batch_size))
 
             for idx in batches:
                 grads = self.loss_grad(X[idx], y[idx])
