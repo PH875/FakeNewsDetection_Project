@@ -22,9 +22,10 @@ def mean_absolute_error(y_pred,y_true):
 def cross_entropy(y_pred,y_true):
     return np.mean(np.sum(-y_true*np.log(y_pred), axis=-1))
 
-def plot_confusion_matrix(cm, cmap="Blues", figsize=(6, 5), class_names=None, title="Confusion Matrix"):
-    
-    fig, ax = plt.subplots(figsize=figsize)
+def plot_confusion_matrix(cm, cmap="Blues", figsize=(6, 5), class_names=None, title="Confusion Matrix", ax=None, show_plt=True, rotation=45, ha='right'):
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize)
+
     im = ax.imshow(cm, interpolation="nearest", cmap=cmap)
     plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
@@ -43,7 +44,7 @@ def plot_confusion_matrix(cm, cmap="Blues", figsize=(6, 5), class_names=None, ti
            title=title)
 
     # Rotate x-tick labels for readability
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+    plt.setp(ax.get_xticklabels(), rotation=rotation,ha=ha, rotation_mode="anchor")
 
     # Annotate each cell
     thresh = cm.max() / 2.0
@@ -57,9 +58,9 @@ def plot_confusion_matrix(cm, cmap="Blues", figsize=(6, 5), class_names=None, ti
                 color="white" if cm[i, j] > thresh else "black",
                 fontsize=11,
             )
-
-    plt.tight_layout()
-    plt.show()
+    if show_plt:
+        plt.tight_layout()
+        plt.show()
 
 def confusion_matrix(y_true, y_pred, num_classes=None, plot=True, **kwargs):
 
@@ -78,6 +79,37 @@ def confusion_matrix(y_true, y_pred, num_classes=None, plot=True, **kwargs):
         plot_confusion_matrix(cm, **kwargs)
     else:
         return cm
+
+def binary_confusion_matrix(y_true, y_pred,plot=True,labels=[0,1], **kwargs):
+    y_true_=np.where(y_true==labels[0], 0,1 )
+    y_pred_=np.where(y_pred==labels[0], 0,1 )
+
+    cm = np.zeros((2, 2), dtype=int)
+
+    for t, p in zip(y_true_, y_pred_):
+        cm[t, p] += 1
+
+    if plot:
+        plot_confusion_matrix(cm, **kwargs)
+    else:
+        return cm
+
+def precision(y_pred, y_true):
+    tp=np.count_nonzero((y_pred==y_true) &(y_true==1))
+    return tp/np.count_nonzero(y_pred==1)
+
+def recall(y_pred, y_true):
+    tp=np.count_nonzero((y_pred==y_true) &(y_true==1))
+    return tp/np.count_nonzero(y_true==1)
+
+def f1_score(y_pred,y_true):
+    prec=precision(y_pred,y_true)
+    rec=recall(y_pred, y_true)
+    return 2* prec*rec/(prec+rec)
+    
+
+
+
 
 
 
