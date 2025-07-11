@@ -1,0 +1,17 @@
+,vectorization type,stop words,tokenizer,number of features,train accuracy [%],test accuracy [%],precision test,recall test,f1-score test,vectorization time [s]
+0,tf-idf,,default,19486,100.0,95.61,0.95,0.96,0.95,0.56
+1,tf-idf,,basic,24862,100.0,96.8,0.96,0.97,0.97,5.03
+2,tf-idf,,stemming,17353,100.0,96.39,0.96,0.96,0.96,11.62
+3,tf-idf,,lemmatization,20872,100.0,96.66,0.96,0.97,0.97,34.52
+4,tf-idf,english,default,19214,100.0,94.28,0.94,0.94,0.94,0.57
+5,tf-idf,english,basic,24592,100.0,96.19,0.96,0.96,0.96,5.02
+6,tf-idf,english,stemming,17216,100.0,95.37,0.95,0.95,0.95,10.56
+7,tf-idf,english,lemmatization,20819,100.0,95.87,0.96,0.96,0.96,30.51
+8,bag-of-words,,default,19486,100.0,95.49,0.95,0.95,0.95,0.57
+9,bag-of-words,,basic,24862,100.0,96.85,0.96,0.97,0.97,5.01
+10,bag-of-words,,stemming,17353,100.0,96.54,0.96,0.97,0.96,11.6
+11,bag-of-words,,lemmatization,20872,100.0,96.71,0.96,0.97,0.97,34.42
+12,bag-of-words,english,default,19214,100.0,94.33,0.94,0.94,0.94,0.56
+13,bag-of-words,english,basic,24592,100.0,96.18,0.96,0.96,0.96,5.01
+14,bag-of-words,english,stemming,17216,99.98,95.51,0.95,0.95,0.95,10.97
+15,bag-of-words,english,lemmatization,20819,100.0,95.9,0.96,0.96,0.96,32.32

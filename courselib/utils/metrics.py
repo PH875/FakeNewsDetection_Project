@@ -81,6 +81,7 @@ def confusion_matrix(y_true, y_pred, num_classes=None, plot=True, **kwargs):
         return cm
 
 def binary_confusion_matrix(y_true, y_pred,plot=True,labels=[0,1], **kwargs):
+    """Calculate confusion matrix for binary classification"""
     y_true_=np.where(y_true==labels[0], 0,1 )
     y_pred_=np.where(y_pred==labels[0], 0,1 )
 
@@ -94,17 +95,41 @@ def binary_confusion_matrix(y_true, y_pred,plot=True,labels=[0,1], **kwargs):
     else:
         return cm
 
-def precision(y_pred, y_true):
-    tp=np.count_nonzero((y_pred==y_true) &(y_true==1))
-    return tp/np.count_nonzero(y_pred==1)
+def precision(y_pred, y_true, true_label=1):
+    """
+    calculate precision of binary classification
+    
+    Parameters:
+        - y_pred: array;  predicted labels
+        - y_true: array;  actual labels
+        - true_label: the label considered true 
+    """
+    tp=np.count_nonzero((y_pred==y_true) & (y_true==true_label))
+    return 0 if tp==0 else tp/np.count_nonzero(y_pred==true_label) # avoid dividing by zero
 
-def recall(y_pred, y_true):
-    tp=np.count_nonzero((y_pred==y_true) &(y_true==1))
-    return tp/np.count_nonzero(y_true==1)
+def recall(y_pred, y_true, true_label=1):
+    """
+    calculate recall for binary classification
+    
+    Parameters:
+        - y_pred: array;  predicted labels
+        - y_true: array;  actual labels
+        - true_label: the label considered true 
+    """
+    tp=np.count_nonzero((y_pred==y_true) & (y_true==true_label))
+    return 0 if tp==0 else tp/np.count_nonzero(y_true==true_label) # avoid dividing by zero
 
-def f1_score(y_pred,y_true):
-    prec=precision(y_pred,y_true)
-    rec=recall(y_pred, y_true)
+def f1_score(y_pred,y_true, true_label=1):
+    """
+    calculate f1-score for binary classification
+    
+    Parameters:
+        - y_pred: array;  predicted labels
+        - y_true: array;  actual labels
+        - true_label: the label considered true 
+    """
+    prec=precision(y_pred,y_true, true_label)
+    rec=recall(y_pred, y_true, true_label)
     return 2* prec*rec/(prec+rec)
     
 
