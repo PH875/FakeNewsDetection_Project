@@ -1,0 +1,10 @@
+,# features,vectorization time [s],train accuracy [%],test accuracy [%],training time [s],vectorization,tokenizer,stop_words,ngram range,max features,z-score,columns,sparse,model,activation,C,widths,# epochs,learning rate,batch size
+0,1000,0.65,94.9552,94.4209,42.84,tf-idf,None,,"(1, 1)",1000,False,['title'],False,MLP,ReLU,,"[1000, 16, 2]",25,10,128
+1,1000,0.65,95.1417,94.5546,264.09,tf-idf,None,,"(1, 1)",1000,False,['title'],False,MLP,ReLU,,"[1000, 128, 2]",25,10,128
+2,1000,0.65,95.1055,94.4766,514.66,tf-idf,None,,"(1, 1)",1000,False,['title'],False,MLP,ReLU,,"[1000, 256, 2]",25,10,128
+3,5000,0.74,97.3662,95.6459,218.85,tf-idf,None,,"(1, 1)",5000,False,['title'],False,MLP,ReLU,,"[5000, 16, 2]",25,10,128
+4,5000,0.74,97.8173,96.2361,1396.44,tf-idf,None,,"(1, 1)",5000,False,['title'],False,MLP,ReLU,,"[5000, 128, 2]",25,10,128
+5,5000,0.74,97.8701,96.147,2791.84,tf-idf,None,,"(1, 1)",5000,False,['title'],False,MLP,ReLU,,"[5000, 256, 2]",25,10,128
+6,10000,0.91,97.369,95.3452,441.57,tf-idf,None,,"(1, 1)",10000,False,['title'],False,MLP,ReLU,,"[10000, 16, 2]",25,10,128
+7,10000,0.91,98.3546,96.3252,2605.94,tf-idf,None,,"(1, 1)",10000,False,['title'],False,MLP,ReLU,,"[10000, 128, 2]",25,10,128
+8,10000,0.91,98.0121,96.0245,5367.42,tf-idf,None,,"(1, 1)",10000,False,['title'],False,MLP,ReLU,,"[10000, 256, 2]",25,10,128

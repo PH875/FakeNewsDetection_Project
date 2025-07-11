@@ -1,0 +1,17 @@
+,# features,vectorization time [s],train accuracy [%],test accuracy [%],training time [s],vectorization,tokenizer,stop_words,ngram range,max features,z-score,columns,sparse,model,activation,C,widths,# epochs,learning rate,batch size
+0,19572,0.55,96.325,94.4766,0.43,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,5e-06,35918
+1,19572,0.55,96.325,94.4766,0.45,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,1e-05,35918
+2,19572,0.55,96.3277,94.4989,0.45,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,5e-05,35918
+3,19572,0.55,96.3305,94.4989,0.45,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.0001,35918
+4,19572,0.55,96.3806,94.5768,0.45,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.0005,35918
+5,19572,0.55,96.4586,94.6102,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.001,35918
+6,19572,0.55,96.943,94.9666,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.005,35918
+7,19572,0.55,97.3579,95.2673,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.01,35918
+8,19572,0.55,98.6079,96.0579,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.05,35918
+9,19572,0.55,99.0952,96.1581,0.45,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.1,35918
+10,19572,0.55,99.7661,95.735,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.5,35918
+11,19572,0.55,99.9165,95.5791,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,1.0,35918
+12,19572,0.55,100.0,95.6125,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,5.0,35918
+13,19572,0.55,100.0,95.7127,0.46,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,10.0,35918
+14,19572,0.55,100.0,95.9354,0.5,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,50.0,35918
+15,19572,0.55,100.0,95.9577,0.44,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,100.0,35918

@@ -1,0 +1,17 @@
+,# features,vectorization time [s],train accuracy [%],test accuracy [%],training time [s],vectorization,tokenizer,stop_words,ngram range,max features,z-score,columns,sparse,model,activation,C,widths,# epochs,learning rate,batch size
+0,19572,0.57,96.5922,94.7439,8.99,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,5e-06,100
+1,19572,0.57,96.7843,94.8664,8.87,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,1e-05,100
+2,19572,0.57,97.7866,95.5457,8.92,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,5e-05,100
+3,19572,0.57,98.3518,95.9131,8.82,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.0001,100
+4,19572,0.57,99.4571,96.069,8.94,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.0005,100
+5,19572,0.57,99.677,95.902,8.91,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.001,100
+6,19572,0.57,99.9694,95.4454,8.97,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.005,100
+7,19572,0.57,100.0,95.167,8.89,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.01,100
+8,19572,0.57,100.0,94.8886,8.88,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.05,100
+9,19572,0.57,100.0,94.4878,8.84,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.1,100
+10,19572,0.57,100.0,93.2183,8.91,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,0.5,100
+11,19572,0.57,100.0,93.3742,8.9,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,1.0,100
+12,19572,0.57,100.0,92.9176,9.07,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,5.0,100
+13,19572,0.57,100.0,93.5746,9.06,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,10.0,100
+14,19572,0.57,100.0,92.9844,9.09,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,50.0,100
+15,19572,0.57,100.0,93.2739,9.12,tf-idf,None,,"(1, 1)",,True,['title'],True,LogisticRegression,,,,100,100.0,100
