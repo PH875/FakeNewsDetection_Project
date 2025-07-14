@@ -22,12 +22,18 @@
 \usepackage{siunitx}
 \usepackage{ragged2e}
 \usepackage{blindtext}
-
+\usepackage{cleveref}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{csvsimple}
+\usepackage[table]{xcolor}
+\usepackage{adjustbox}
 % Header/Footer
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{ML Project Report: Fake News Detection}
-\lhead{Martin Wagner, Philipp Hoffmann}
+\lhead{Philipp Hoffmann, Martin Wagner}
 \cfoot{\thepage}
 
 % Section formatting
@@ -36,10 +42,10 @@
 
 % Title
 \title{\textbf{Machine Learning Project Report: Fake News Detection}}
-\author{Martin Wagner, Philipp Hoffmann \\
+\author{Philipp Hoffmann, Martin Wagner \\
 	Applied ML – Ludwig-Maximilians-Universität München \\
-	\texttt{\href{mailto:wagner.mar@campus.lmu.de}{wagner.mar@campus.lmu.de},
-	\href{mailto:philipp.hoffmann@campus.lmu.de}{philipp.hoffmann@campus.lmu.de}}}
+	\href{mailto:philipp.hoffmann@campus.lmu.de}{philipp.hoffmann@campus.lmu.de},
+	\texttt{\href{mailto:wagner.mar@campus.lmu.de}{wagner.mar@campus.lmu.de}}}
 \date{\today}
 
 
@@ -49,57 +55,60 @@
 	\maketitle
 	
 	\section{Task Overview}
-	Briefly describe the dataset or model you worked on, the goal of the project, and why the task is challenging. For example, challenges may include complex preprocessing, large dataset size, class imbalance, poor performance of baseline approaches, or the need for more complex models to achieve good results.
-	
-	\blindtext
+	Due to the enormous amount of news published every day, distinguishing fake from real news is becoming an impossible task for humans, making the usage of computer models indispensable. In this project, we tested different models and text preprocessing methods using the "fake-and-real-news-dataset"\footnote{\url{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}}. This dataset collects title and text of over 40000 news articles classified as fake or true news.
 	
 	\section{Methods}
 	We compared the performance of logistic regression and linear svm models (mainly on the collection of titles) using different vectorization techniques from natural language processing. 
-	We used \texttt{TfidfVectorizer} and \texttt{CountVectorizer} from \texttt{scikit-learn} for basic text vectorization. Given a vocabularly of tokens (e.g. words), bag-of-words assigns to a document $d$ for each token $t$, the term-frequency $\operatorname{tf}(t,d)$, defined as the count of term $t$ in $d$ divided by the total number of terms. A bit more evolved is Tf-Idf-vectorization, which also takes into account the frequency of how often a term occurs in a fixed corpus $D=\{d_1, \dots, d_n\}$ of documents $d_1, \dots, d_n$. Given a term $t$, the inverse-document frequency of $t$ in $D$ is $\operatorname{idf}(t,D):=1+\log\left(\frac{1+n}{1+\operatorname{df}(t)}\right)$, where $\operatorname{df}(t)$ is the number of documents in $D$ containing the term $D$. Then the Tf-Idf-score of a term $t$ with respect to the collection $D$ is defined as \[\operatorname{tf-idf}(t,d,D):=\operatorname{tf}(t,d)\operatorname{idf}(t,D).\]
+	We used \texttt{TfidfVectorizer} and \texttt{CountVectorizer} from \texttt{scikit-learn} for basic text vectorization, which handle tokenization including lower-casing and punctuation removal.\\
+	
+	Given a vocabularly of tokens (e.g. words), bag-of-words assigns to a document $d$ for each token $t$, the term-frequency $\operatorname{tf}(t,d)$, defined as the count of term $t$ in $d$ divided by the total number of terms. A bit more evolved is Tf-Idf-vectorization, which also takes into account the frequency of how often a term occurs in a fixed corpus $D=\{d_1, \dots, d_n\}$ of documents $d_1, \dots, d_n$. Given a term $t$, the inverse-document frequency of $t$ in $D$ is $\operatorname{idf}(t,D):=1+\log\left(\frac{1+n}{1+\operatorname{df}(t)}\right)$, where $\operatorname{df}(t)$ is the number of documents in $D$ containing the term $D$. Then the Tf-Idf-score of a term $t$ with respect to the collection $D$ is defined as \[\operatorname{tf-idf}(t,d,D):=\operatorname{tf}(t,d)\operatorname{idf}(t,D).\]
 	Note that $d$ does not need to be contained in the collection $D$ of documents itself. The tools from \texttt{scikit-learn} also apply $L2$-normalization to the obtained vectors, which we retained. Additionally, we applied z-score normalization afterwards, as this gave us better results, in particular for linear SVMs. 
 	We adopted models in courselib to support sparse matrix calculation and implemented methods to adopt for feature shifts (due to z-score normalization) without destroying the computational efficiency resulting from the sparsity of the unshifted feature matrices. Moreover we implemented custom tokenizers using \texttt{nltk} 
 	that support for example stemming or lemmatiztation, i.e. reduce words to their basic form. To test all of these options more compactly, we implemented a multi-column-vectorizer which supports vectorization of text data of one or multiple columns of a dataframe with different vectorization options.
 	
 	\section{Experiments and Results}
-	Present your results. Use figures, tables, and metrics:
-	\blindtext
-	\begin{figure}[htbp]
+	As both bag-of-words and tf-idf yield highly sparse, high-dimensional vectors, one expects the problem to be linearly separable, thus we restrict our experiments to linear models, namely logistic regression and linear SVM. For all our experiments, we used a 80/20 train-test-split.\\
+	
+	We compared the models on tf-idf-vectorized text data with good performing learning rates with full batch size. While both models achieved almost perfect train accuracy, logistic regression performed slightly better and faster. Smaller batch sizes could not improve results, but slowed down the training time significantly (see \Cref{Fig 1}). Because of this we only used the logistic regression model for further experimentation. 
+	
+	
+
+
+\begin{figure}[htbp]
+	\centering
+	
+	% First row: Two images side-by-side
+	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\begin{subfigure}[b]{0.37\textwidth}
-			\includegraphics[height=5cm]{figures/model_comparison_accuracy_evolution.pdf}
-			\caption{}
-			\label{fig:a}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[b]{0.2\textwidth}
-			\includegraphics[height=5cm]{figures/model_comparison_confusion_matrices.pdf}
-			\caption{}
-			\label{fig:b}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[b]{0.37\textwidth}
-			\includegraphics[height=5cm]{figures/vectorization_comparison_feature_number_impact.pdf}
-			\caption{}
-			\label{fig:c}
-		\end{subfigure}
-		\caption{figure}
-		\label{fig:comparison}
-	\end{figure}
-		\begin{table}[htbp]
+		\includegraphics[height=5cm]{figures/model_comparison_accuracy_evolution.pdf}
+		\caption{}
+		\label{fig:accuracy}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{figures/model_comparison_confusion_matrices.pdf}
+		\caption{}
+		\label{fig:confusion}
+	\end{subfigure}
+	
+	\vspace{1em} % Vertical spacing between images and table
+	
+	% Second row: Centered table
+	\begin{subfigure}[t]{\textwidth}
 		\centering
 		\small
 		\setlength{\tabcolsep}{4pt}
-		\renewcommand{\arraystretch}{1.1} % Increase row height for better spacing
-		
-		\label{tab:results2}
-		\begin{adjustbox}{scale=.8}
-			\rowcolors{2}{lightgray}{white} % Alternate row colors
+		\renewcommand{\arraystretch}{1.1}
+		\begin{adjustbox}{scale=.8, center}
+			\rowcolors{2}{lightgray}{white}
 			\begin{tabular}{|l|l|l|r|r|r|r|r|}
 				\hline
-				\rowcolor{gray!30} % Header background color
-				\bfseries Model & \bfseries batch size & \bfseries  \makecell{Train\\Accuracy\\{\footnotesize[\%]}} & \bfseries  \makecell{Test\\Accuracy\\{\footnotesize[\%]}} & 
-				\bfseries  \makecell{Training\\Time\\{\footnotesize[s]}} & 
-				\bfseries Precision & \bfseries Recall & \bfseries F1-Score \\
+				\rowcolor{gray!30}
+				\textbf{Model} & \textbf{batch size} & \textbf{\makecell{Train\\Accuracy\\{\footnotesize[\%]}}} & 
+				\textbf{\makecell{Test\\Accuracy\\{\footnotesize[\%]}}} & 
+				\textbf{\makecell{Training\\Time\\{\footnotesize[s]}}} & 
+				\textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 				\hline
 				\csvreader[
 				late after line=\\\hline
@@ -107,12 +116,92 @@
 				{\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii & \csvcolviii}%
 			\end{tabular}
 		\end{adjustbox}
-		\vspace{0.2cm}
-		\caption{table}
-	\end{table}
+		\caption{}
+
+	\end{subfigure}
 	
-	\blindtext
-		\begin{table}[htbp]
+	\caption{Model comparison between logistic regression and linear SVM. (a): Accuracy evolution on full batch, (b): corresponding confusion matrices, (c): comparison mini batch and full batch}
+	\label{Fig 1}
+\end{figure}
+
+	
+	For the second part of our experiment, we tested different vectorization methods. \Cref{Fig 2}(a) shows how feature number impact accuracy: In general more features result in better accuracy, but more than 5000 features yield only minor improvement. This trend is also confirmed by \Cref{Fig 2}(b), when using text or text and titles as data, the number of feature significantly increases while also resulting in even better test accuracy.\\
+	\begin{figure}[htbp]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\vspace{0pt} % Reset top alignment reference
+			\includegraphics[height=5cm]{figures/vectorization_comparison_feature_number_impact.pdf}
+			\subcaption{}
+	
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\vspace{5pt} % Reset top alignment reference
+			
+			% First table (b)
+			\small
+			\setlength{\tabcolsep}{4pt}
+			\renewcommand{\arraystretch}{1.1}
+			\begin{adjustbox}{scale=.8, valign=t}
+				\rowcolors{2}{lightgray}{white}
+				\begin{tabular}{|l|l|r|r|r|r|r|}
+					\hline
+					\rowcolor{gray!30}
+					\bfseries Data & 
+					\bfseries Features & 
+					\bfseries \makecell{Train\\Accuracy\\{\footnotesize[\%]}} & 
+					\bfseries \makecell{Test\\Accuracy\\{\footnotesize[\%]}} & 
+					\bfseries \makecell{Vectorization\\Time\\{\footnotesize[s]}} & 
+					\bfseries \makecell{Training\\Time\\{\footnotesize[s]}} \\
+					\hline
+					\csvreader[
+					late after line=\\\hline
+					]{tables/vectorization_more_text_data.csv}{}%
+					{\csvcoli  & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}%
+				\end{tabular}
+			\end{adjustbox}
+			\subcaption{}
+
+			
+			\vspace{10pt} % Reduced vertical spacing
+			
+			% Second table (c)
+			\small
+			\setlength{\tabcolsep}{4pt}
+			\renewcommand{\arraystretch}{1.1}
+			\begin{adjustbox}{scale=.8, valign=t}
+				\rowcolors{2}{lightgray}{white}
+				\begin{tabular}{|l|l|r|r|r|r|}
+					\hline
+					\rowcolor{gray!30}
+					\bfseries \makecell{n-gram\\range} & 
+					\bfseries Features & 
+					\bfseries \makecell{Train\\Accuracy\\{\footnotesize[\%]}} & 
+					\bfseries \makecell{Test\\Accuracy\\{\footnotesize[\%]}} & 
+					\bfseries \makecell{Vectorization\\Time\\{\footnotesize[s]}} & 
+					\bfseries \makecell{Training\\Time\\{\footnotesize[s]}} \\
+					\hline
+					\csvreader[
+					late after line=\\\hline
+					]{tables/comparison_ngrams.csv}{}%
+					{\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}%
+				\end{tabular}
+			\end{adjustbox}
+			\subcaption{}
+		\end{minipage}
+		
+		\caption{(a): impact of number of features, (b): performance with different data, (c): Influence of n-gram ranges, n-gram range given as minimum length - maximum length}
+		\label{Fig 2}
+	\end{figure}
+	
+
+	
+		
+	With that in mind we compared tf-idf as well as bag-of-words vectorization using four different tokenization methods, with and without stop word removal. As \Cref{table 1} highlights, all combinations achieved similar performance, but stop word removal slightly decreases test accuracy. Moreover our custom tokenizers improved test accuracy slightly but the vectorization time increased heavily with the complexity of the tokenizer. \newline\newline
+	
+	\begin{table}[h!]
 		\centering
 		\small
 		\setlength{\tabcolsep}{4pt}
@@ -138,79 +227,31 @@
 		\end{adjustbox}
 		
 		\vspace{0.2cm}
-		\caption{table}
+		\label{table 1}
+		\caption{Comparison of different vectorization configurations with four different tokenizers. default: default tokenization from \texttt{TfIdfVectorizer} without custom tokenizer, basic: \texttt{nltk.word\_tokenize} combined with punctuation removal and lowercasing, stemming: basic tokenizer combined with \texttt{SnowballStemmer} from \texttt{nltk}, lemmatization: basic tokenizer combined with \texttt{WordNetLemmatizer} from \texttt{nltk}.}
 	\end{table}
 	
-	\blindtext
+	
+	Lastly we investigated which words or short phrases the model identified as most relevant for distinguishing between real and fake news (\Cref{Fig 3}). For this we trained the model on different combinations of n-grams. \Cref{Fig 2}(c) shows that training only with bi- and especially trigrams decreased test accuracy significantly.
 
 
-		\begin{table}[htbp]
+
+
+
+
+
+	\begin{figure}[h!]
 		\centering
-		\small
-		\setlength{\tabcolsep}{4pt}
-		\renewcommand{\arraystretch}{1.1}
-		
-		
-		\begin{adjustbox}{scale=.8}
-			\rowcolors{2}{lightgray}{white}
-			\begin{tabular}{|l|l|r|r|r|r|}
-				\hline
-				\rowcolor{gray!30} % Header background color
-				\bfseries  \makecell{n-gram\\range} & 
-				\bfseries  Features & 
-				\bfseries  \makecell{Train\\Accuracy\\{\footnotesize[\%]}} & 
-				\bfseries  \makecell{Test\\Accuracy\\{\footnotesize[\%]}} & 
-				\bfseries \makecell{Vectorization\\Time\\{\footnotesize[s]}}&
-				\bfseries  \makecell{Training\\Time\\{\footnotesize[s]}} \\
-				\hline
-				\csvreader[
-				late after line=\\\hline
-				]{tables/comparison_ngrams.csv}{}%
-				{\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}%
-			\end{tabular}\end{adjustbox}
-		\caption{table}
-	\end{table}
-	
-	\begin{table}[htbp]
-		\centering
-		\small
-		\setlength{\tabcolsep}{4pt}
-		\renewcommand{\arraystretch}{1.1} % Increase row height for better spacing
-		
-
-		\begin{adjustbox}{scale=.8}
-		\rowcolors{2}{lightgray}{white}
-		\begin{tabular}{|l|l|r|r|r|r|r|}
-			\hline
-			\rowcolor{gray!30} % Header background color
-			\bfseries  Data & 
-			\bfseries  Features & 
-			\bfseries  \makecell{Train\\Accuracy\\{\footnotesize[\%]}} & 
-			\bfseries  \makecell{Test\\Accuracy\\{\footnotesize[\%]}} & 
-			\bfseries \makecell{Vectorization\\Time\\{\footnotesize[s]}}&
-			\bfseries  \makecell{Training\\Time\\{\footnotesize[s]}} \\
-			\hline
-			\csvreader[
-			late after line=\\\hline
-			]{tables/vectorization_more_text_data.csv}{}%
-			{\csvcoli  & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}%
-		\end{tabular}
-		\end{adjustbox}
-		\vspace{0.2cm}
-		\caption{Table}
-	\end{table}
-	
-	\blindtext 
-	\begin{figure}
-		\includegraphics[width=\textwidth]{figures/wordclouds.pdf}
-		\caption{figure}
+		\includegraphics[width=.85\textwidth]{figures/wordclouds.pdf}
+		\caption{Illustration of most important n-grams identified by the model trained only on uni-, bi-, trigrams resp.}
+		\label{Fig 3}
 	\end{figure}
 	
 
 	
 	
 	\section{Discussion}
-	Summarize key findings, insights, or issues. Optionally, suggest future work or limitations.
-	\blindtext
+	Our experiment shows that linear models are indeed well suited for detecting fake news, even when analyzing only news titles. If one additionally also trains the model on the whole body of text, almost perfect classification is achievable. Removing stop words from the titles seems to worsen the performance, which either could indicate that titles become too short or that they are more common in fake or real news. It seems like machine learning models prefer single words for classification, whereas humans usually need context for understanding text. However our models only give binary classification and cannot detect the exact passages containing fake news, which could be an interesting objective for future research. A starting idea for this could be to divide the text into smaller paragraphs. 
+	
 	
 \end{document}
