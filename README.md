@@ -1,15 +1,20 @@
 ### Setup
 1. Download (and possibly extract) this repository
 2. In the terminal, navigate to the downloaded repository
-3. Create the environment using
+3. Create the environment. Using conda (recommended) run:
    ```bash
    conda env create -f environment.yml
    ```
-4. Activate the environment:
+   If using pip, activate or create your prefered environment and run:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+4. For conda users: Activate the environment:
    ```bash
    conda activate fakenews_detection
    ```
-5. Run the code from this environment
+5. Run all the code from this environment.
 
 
 Notizen: 
