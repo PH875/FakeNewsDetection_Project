@@ -14,8 +14,9 @@ class LogisticRegression(TrainableModel):
         - optimizer: Optimizer object (e.g., GDOptimizer)
         - penalty: One of {"none", "ridge", "lasso"}
         - lam: Regularization strength (default: 0.0)
-        - offset: offset of all X in the followin function, the methods give the same result for some X as the corresponding methods
-            in the original LogisticRegression with X-offset. offset is used to make the computation more efficient, useful for z-score normalization of sparse matrices
+        - offset: 1-dimensional array, default None (corresponding to 0); offset of all X in the following functions, the methods gives the same result for some X as the
+        corresponding methods in the original LogisticRegression class would give with X - offset (broadcasted). The offset can be used to make the computation more 
+        efficient, for example when one wants to z-score normalize sparse matrices without effectively destroying sparsity
     """
     
     def __init__(self, w, b, optimizer, penalty="none", lam=0.0, offset=None):

@@ -43,6 +43,19 @@ class RBFKernel(Kernel):
 
 
 class LinearSVM(TrainableModel):
+    """
+    Linear SVM model with optional regularization, adapted for sparse matrix compatibility
+
+    Parameters:
+        - w: Initial weights (array-like)
+        - b: Initial bias (scalar)
+        - C: C-parameter
+        - optimizer: Optimizer object (e.g., GDOptimizer)
+        - penalty: One of {"none", "ridge", "lasso"}
+        - offset: 1-dimensional array, default None (corresponding to 0); offset of all X in the following functions, the methods gives the same result for some X as the
+        corresponding methods in the original LogisticRegression class would give with X - offset (broadcasted). The offset can be used to make the computation more 
+        efficient, for example when one wants to z-score normalize sparse matrices without effectively destroying sparsity
+    """
 
     def __init__(self, w, b, optimizer, C=10., offset=None):
         super().__init__(optimizer)

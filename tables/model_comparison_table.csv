@@ -1,5 +1,5 @@
 model,batch size,train accuracy [pct.],test accuracy [pct.],training time [s],test precision,test recall,test f1-score
-LogisticRegression,full,100.0,95.77,0.63,0.95,0.96,0.96
-LinearSVM,full,99.36,95.22,0.88,0.94,0.96,0.95
-LogisticRegression,100,100.0,95.19,8.89,0.94,0.95,0.95
-LinearSVM,100,96.38,91.37,23.0,0.91,0.91,0.91
+Logistic Regression,full,100.0,95.56,0.68,0.95,0.96,0.95
+Linear SVM,full,99.38,95.42,0.91,0.94,0.96,0.95
+Logistic Regression,100,100.0,95.19,9.2,0.94,0.96,0.95
+Linear SVM,100,96.59,92.19,23.95,0.91,0.92,0.92
