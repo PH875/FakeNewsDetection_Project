@@ -26,25 +26,25 @@ def min_max(x):
 
 
 
-def lp_normalize(X, ord=2):
+def lp_normalize(X, ord=None):
     """
     normalizes rows of an array, e.g. for l2 or l1 normalization, compatible with sparse matrices
     
     Paramters:
     X: np array or scipy sparse ndarray or matrix
-    ord: non-zero int| inf| -inf, default=2 (L2 normalization); order of the norm
+    ord: non-zero None|1|inf, default=None (L2 normalization); order of the norm (None=l2-norm, 1=l1-norm, inf=l\infty norm)
     
     Returns:
     X_normalized: np array or scipy sparse csr matrix (depending on type of X); rows of X normalized to ord-norm 1
     """
     if sp.issparse(X):
-        X=X.tocsr()
+        X=X.tocsr() # make sure X is csr matrix
         norms=sp.linalg.norm(X, ord=ord, axis=1)
-        norms[norms==0]=1 # prevent dividing by zero (without changing normalization)
+        norms[norms==0]=1 # avoid dividing by zero (without changing normalization)
         X_normalized=(X.T.multiply(1/norms).tocsr()).T
     else:
         norms=np.linalg.norm(X, ord, axis=1)
-        norms[norms==0]=1 # Avoid dividing by zero (without changing normalization)
+        norms[norms==0]=1 # avoid dividing by zero (without changing normalization)
         X_normalized=(X.T*(1/norms)).T
     
     return X_normalized
@@ -60,7 +60,7 @@ def standardize_sparse_matrix(X):
         - offset: array; vector of the mean/std built column wise
         
         
-    z-score standardized X is then given by X_scaled - offset. This can be used outside to implement z-score standardization more efficiently.
+    z-score standardized X is then given by X_scaled - offset (broadcasted). This can be used outside to implement z-score standardization more efficiently.
     """
 
     mean=np.array(X.mean(axis=0)).reshape((-1,))

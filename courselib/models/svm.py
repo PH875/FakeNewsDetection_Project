@@ -52,9 +52,9 @@ class LinearSVM(TrainableModel):
         - C: C-parameter
         - optimizer: Optimizer object (e.g., GDOptimizer)
         - penalty: One of {"none", "ridge", "lasso"}
-        - offset: 1-dimensional array, default None (corresponding to 0); offset of all X in the following functions, the methods gives the same result for some X as the
-        corresponding methods in the original LogisticRegression class would give with X - offset (broadcasted). The offset can be used to make the computation more 
-        efficient, for example when one wants to z-score normalize sparse matrices without effectively destroying sparsity
+         - offset: 1-dimensional array, default None (corresponding to 0 offset); offset of all X in the following methods, the methods give the same result for some X as
+        the corresponding methods in the original LogisticRegression class would give with X - offset (broadcasted). The offset can be used to make some computations more 
+        efficient, for example when one wants to z-score normalize sparse matrices without effectively destroying sparsity.
     """
 
     def __init__(self, w, b, optimizer, C=10., offset=None):
@@ -82,7 +82,9 @@ class LinearSVM(TrainableModel):
                 grad_w=2 * self.w - self.C * (np.array(X_masked.multiply(y_masked[:, None]).mean(axis=0)).reshape((-1,))-np.mean(y_masked)*self.offset)
             else:
                 grad_w = 2 * self.w - self.C * np.mean(y_masked[:, None] * X_masked, axis=0)
+                
             grad_b = - self.C * np.mean(y_masked)
+            
         else:
             grad_b = 0.0
             grad_w = 2 * self.w

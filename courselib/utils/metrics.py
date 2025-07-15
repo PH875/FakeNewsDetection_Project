@@ -102,9 +102,9 @@ def precision(y_pred, y_true, true_label=1):
     Parameters:
         - y_pred: array;  predicted labels
         - y_true: array;  actual labels
-        - true_label: the label considered true 
+        - true_label: the label considered as true (default=1)
     """
-    tp=np.count_nonzero((y_pred==y_true) & (y_true==true_label))
+    tp=np.count_nonzero((y_pred==y_true) & (y_true==true_label)) # true positives
     return 0 if tp==0 else tp/np.count_nonzero(y_pred==true_label) # avoid dividing by zero
 
 def recall(y_pred, y_true, true_label=1):
@@ -114,9 +114,9 @@ def recall(y_pred, y_true, true_label=1):
     Parameters:
         - y_pred: array;  predicted labels
         - y_true: array;  actual labels
-        - true_label: the label considered true 
+        - true_label: the label considered as true (default=1)
     """
-    tp=np.count_nonzero((y_pred==y_true) & (y_true==true_label))
+    tp=np.count_nonzero((y_pred==y_true) & (y_true==true_label)) # true positives
     return 0 if tp==0 else tp/np.count_nonzero(y_true==true_label) # avoid dividing by zero
 
 def f1_score(y_pred,y_true, true_label=1):
@@ -126,11 +126,11 @@ def f1_score(y_pred,y_true, true_label=1):
     Parameters:
         - y_pred: array;  predicted labels
         - y_true: array;  actual labels
-        - true_label: the label considered true 
+        - true_label: the label considered as true (default=1)
     """
-    prec=precision(y_pred,y_true, true_label)
-    rec=recall(y_pred, y_true, true_label)
-    return 2* prec*rec/(prec+rec)
+    prec=precision(y_pred,y_true, true_label) # precision
+    rec=recall(y_pred, y_true, true_label) # recall
+    return 0 if (prec+rec)== 0 else 2* prec*rec/(prec+rec) # avoid dividing by zero
     
 
 

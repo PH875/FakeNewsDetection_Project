@@ -1,0 +1,17 @@
+,model,epochs,learning rate,train accuracy [pct.],test accuracy [pct.]
+0,Logistic Regression,100,5e-06,96.2052,94.5768
+1,Logistic Regression,100,1e-05,96.2108,94.5768
+2,Logistic Regression,100,5e-05,96.2192,94.5991
+3,Logistic Regression,100,0.0001,96.2275,94.6102
+4,Logistic Regression,100,0.0005,96.2804,94.6325
+5,Logistic Regression,100,0.001,96.3361,94.7216
+6,Logistic Regression,100,0.005,96.8512,94.9332
+7,Logistic Regression,100,0.01,97.3662,95.2339
+8,Logistic Regression,100,0.05,98.6052,95.9465
+9,Logistic Regression,100,0.1,99.1035,96.1915
+10,Logistic Regression,100,0.5,99.8079,96.0245
+11,Logistic Regression,100,1.0,99.9443,95.8797
+12,Logistic Regression,100,5.0,100.0,95.7016
+13,Logistic Regression,100,10.0,100.0,95.9243
+14,Logistic Regression,100,50.0,100.0,96.1247
+15,Logistic Regression,100,100.0,100.0,96.1581

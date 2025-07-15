@@ -1,4 +1,4 @@
 data,learning rate,number of features,train accuracy [pct.],test accuracy [pct.],vectorization time [s],training time [s]
-title,10.0,19562,100.0,95.56,0.56,0.52
-text,0.1,111364,99.98,98.44,11.71,4.14
-title+text,0.1,130926,100.0,98.95,12.21,4.56
+title,10.0,19546,100.0,95.81,0.57,0.55
+text,0.1,111531,99.99,98.79,12.05,4.73
+title+text,0.1,131077,100.0,99.08,12.67,5.03

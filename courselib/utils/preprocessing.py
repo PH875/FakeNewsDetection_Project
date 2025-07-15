@@ -55,7 +55,7 @@ def labels_to_numbers(labels, class_names=None):
     return np.array([label_to_number[label] for label in labels])
 
 
-########################################################################## TOKENIZATION AND VECTORIZATION
+######################################## TOKENIZATION AND VECTORIZATION ##############################
 
 
 def get_wordnet_pos(treebank_tag):
@@ -71,7 +71,7 @@ def get_wordnet_pos(treebank_tag):
         return wn.NOUN  
 
 
-########## PUNCTUATION AND STOPWORD LISTS ############
+########## PUNCTUATIO NLIST ############
 PUNCTUATIONS=string.punctuation+'’'+ '“'+ '”'
 
 
@@ -103,7 +103,7 @@ def lemmatization_tokenizer(text, language='english', stop_words=None):
     """
     lemmatization tokenizer
     Tokenizes text by words and removes punctuation, lowercases words and applies lemmatization to each word. 
-    Optionally removes given stopwords..
+    Optionally removes given stopwords.
     
     Parameters:
         - text: str; text to tokenize
@@ -145,45 +145,40 @@ def stemming_tokenizer(text, language='english', stop_words=None):
  
 class multi_column_vectorizer:
     """
-    Vectorizer for vectorizing multiple columns of a pandas dataframe. Allows tf-idf as well as bag-of-words vectorization, different ngrams, stop_word_removal, normalization and
-    usage of custom tokenizers. 
+    Vectorizer for vectorizing multiple columns of a pandas dataframe. Allows tf-idf as well as bag-of-words vectorization, different ngrams, stop_word_removal, normalization and usage of custom tokenizers. 
     
     Attributes:
         - col_names: list of str; names of the colums to vectorize
         - vectorization: 'tf-idf'|'bag-of-words', default='tf-idf; vectorization type
         - max_features_per_column: list of int or None, default=None; max features corresponding to each column,
           if None, the number of features is unlimited
-          
         - stop_words: "english"|list|None, default=None, whether stopwords should be removed. Use "english" to remove english stopwords or a custom list of stopwords.
         - ngram_range: tuple (min, max); range of n-values for n-grams
-        - tokenizer: callable, default=None; custom tokenizer
+        - tokenizer: callable, default=None; custom tokenizer, should have parameters (text, language, stop_words)
         - language: str, default='english'; language of the text data to vectorize (only important when using custom tokenizers)
-        - norm_ord: 1|2|None, default=2; order of Lp-normalization to apply
-        
-        -self.vectorizers: dict of vectorizer, keys are col_names, values vectorizers from sklearn.feature_extraction.text
+        - normalization: 'l1'|'l2'|None, default='l2'; whether to apply L1 or L2 normalization when vectorizing
+        -vectorizers: dict of vectorizer, keys are col_names, values vectorizers from sklearn.feature_extraction.text
         
     Methods:
-        - fit_transform(df, colnames, sparse): learn vocabulary from columns in colnames of pd dataframe df and vectorizes them, returns a matrix; if sparse=True, this is a sparse matrix, else a numpy array
-        - transform(df,colnames, sparse): vectorizes columns in colnames of of pd dataframe df using the learned vocabulary, returns a matrix; if sparse=True, this is a sparse matrix, else a numpy array
-        - get_feature_names_out(): gives out the learned vocabularies of each column in dictionary form 
-        
-        
-         
-         
+        - fit_transform(df, col_names, sparse): learn vocabulary from columns in col_names of pd dataframe df and vectorizes them, returns a matrix; if sparse=True, this is a sparse matrix, else a numpy array
+        - transform(df,colnames, sparse): vectorizes columns in colnames of of pd dataframe df using the learned vocabulary (and idf values when using 'tf-idf'), returns a
+        matrix; if sparse=True, this is a sparse matrix, else a numpy array
+        - get_feature_names_out(): gives the learned vocabularies of each column in dictionary form 
+    
     """
+    
     def __init__(self, col_names,vectorization='tf-idf', max_features_per_column=None, stop_words=None, ngram_range=(1,1), tokenizer=None, language='english', normalization='l2'):
         """
         Parameters:
             - col_names: list of str; names of the colums to vectorize
             - vectorization: 'tf-idf'|'bag-of-words', default='tf-idf; vectorization type
-            - max_features_per_column: int|list of int|None, default=None; max features either one integer for all columns or a list of integers corresponding to each column,
-            if None, the number of features is unlimited
-            
+            - max_features_per_column: int|list of int|None, default=None; max features either one integer for all columns or a list of integers corresponding to each
+            column, if None, the number of features is unlimited
             - stop_words: "english"|list|None, default=None, whether stopwords should be removed. Use "english" to remove english stopwords or a custom list of stopwords.
             - ngram_range: tuple (min, max); range of n-values for n-grams
-            - tokenizer: callable, default=None; custom tokenizer
+            - tokenizer: callable, default=None; custom tokenizer, should have parameters (text, language, stop_words)
             - language: str, default='english'; language of the text data to vectorize (only important when using custom tokenizers)
-            - normalization: 'l1'|'l2'|None, default='l2'; wheter to apply L1 or L2 normalization when vectorizing
+            - normalization: 'l1'|'l2'|None, default='l2'; whether to apply L1 or L2 normalization when vectorizing
         """
         
         self.col_names=col_names
@@ -192,25 +187,25 @@ class multi_column_vectorizer:
         self.language=language
         
         if normalization=='l2':
-            self.norm_ord=2
+            self.normalization='l2'
         elif normalization=='l1':
-            self.norm_ord=1
+            self.normalization='l1'
         elif normalization is not None:
             raise Exception(f'Normalization {normalization} not supported.')
         else:
-            self.norm_ord=None
+            self.normalization=None
 
         if type(max_features_per_column) is int or max_features_per_column is None:
-            self.max_features_per_column=[max_features_per_column]*len(col_names)
+            self.max_features_per_column=[max_features_per_column]*len(col_names) # use same maximal number for each column
         else:
             self.max_features_per_column=max_features_per_column
         
         if tokenizer is not None:
             if stop_words=='english':
-               self.stop_words=ENGLISH_STOP_WORDS #Use english stopword list from sklearn.feature_extraction.text
+               self.stop_words=ENGLISH_STOP_WORDS # Use english stopword list from sklearn.feature_extraction.text
             else:
                 self.stop_words=stop_words
-            self.tokenizer=lambda text: tokenizer(text, language=self.language, stop_words=self.stop_words) #set up custom tokenizer
+            self.tokenizer=lambda text: tokenizer(text, language=self.language, stop_words=self.stop_words) # set up custom tokenizer
         else:
             self.stop_words=stop_words
             self.tokenizer=None
@@ -220,7 +215,7 @@ class multi_column_vectorizer:
         self.vectorizers={}
         
         #Set up parameters to pass to vectorizers from sklearn.feature_extraction.text below
-        args={'ngram_range':self.ngram_range, 'tokenizer':self.tokenizer}
+        args={'ngram_range': self.ngram_range, 'tokenizer': self.tokenizer}
         if tokenizer is not None:
             args['token_pattern']=None # to prevent warning when custom tokenizer is used
             args['stop_words']=None # do not use build in stop word removal from sklearn's vectorizers, as stopword removal should be already handled in custom tokenizers
@@ -230,8 +225,8 @@ class multi_column_vectorizer:
         
         for name, max_features in zip(self.col_names, self.max_features_per_column):
             if self.vectorization=='tf-idf':
-                vectorizer=TfidfVectorizer(max_features=max_features,  **args)  # although TfidfVectorizer does support a normalization paramter norm, we normalize in fit_transform and transform
-                                                                                # for consistency with CountVectorizer which does not directly support normalization
+                vectorizer=TfidfVectorizer(max_features=max_features,  **args)  # although TfidfVectorizer does support a normalization paramter, we normalize in
+                # fit_transform and transform for consistency with CountVectorizer which does not directly support normalization
             elif vectorization=='bag-of-words':
                 vectorizer=CountVectorizer(max_features=max_features, **args)
             else:
@@ -241,42 +236,42 @@ class multi_column_vectorizer:
         
     def fit_transform(self, df, col_names=None, sparse=True):
         """
-        learn vocabulary from columns in colnames of pd dataframe df and vectorizes them
+        learn vocabulary (and idf-values if self.vectorization='tf-idf') from columns in colnames of pd dataframe df and vectorizes them
         
         Parameters:
-            - df: pandas dataframe; dataframe containing columns to vectorize
-            - colnames: list of str; names of the columns of df to vectorize, should be in self.col_names
-            - sparse: bool; if True, output will be a sparse array, else a numpy array
+            - df: pandas dataframe; dataframe containing the columns to vectorize
+            - col_names: list of str, default=None; names of the columns of df to vectorize, should be in self.col_names, if None, self.col_names will be used
+            - sparse: bool, default=True; if True, output will be a sparse array, else a numpy array
             
         Returns:
             - X array; array containing the vectorized data of all columns
         """
         if col_names is None:
-            col_names=self.col_names #vectorize all columns in self.col_names
+            col_names=self.col_names # vectorize all columns in self.col_names
         X_arrays=[]
         
         for name in col_names:
             #Check if columns exist in self.col_names and df
             if not name in self.col_names:
-                raise Exception(f"No vectorizer for column {name}")
+                raise Exception(f"No vectorizer for column {name} initialized")
             elif not name in df.columns:
                 raise Exception(f"No column named {name} in dataframe")
             
+            # Apply vectorization
             corpus=list(df[name])
             x=self.vectorizers[name].fit_transform(corpus)
-            #normalize
             
-            if not self.norm_ord is None:
-                x=lp_normalize(x, ord=self.norm_ord)
+            #normalize
+            if not self.normalization is None:
+                ord=None if self.normalization=='l2' else 1 # Note that ord=None gives the l2-norm in lp_normalize
+                x=lp_normalize(x, ord=ord)
                 
             X_arrays.append(x)
         
         X=sp.hstack(X_arrays)
-        
-        
-            
+          
         if not sparse:
-            X=X.toarray()
+            X=X.toarray() # convert to numpy
 
         return X
 
@@ -286,8 +281,8 @@ class multi_column_vectorizer:
         
         Parameters:
             - df: pandas dataframe; dataframe containing columns to vectorize
-            - colnames: list of str; names of the columns of df to vectorize, should be in self.col_names
-            - sparse: bool; if True, output will be a sparse array, else a numpy array
+            - col_names: list of str, default=None; names of the columns of df to vectorize, should be in self.col_names, if None, self.col_names will be used
+            - sparse: bool, default=True; if True, output will be a sparse array, else a numpy array
             
         Returns:
             - X array; array containing the vectorized data of all columns
@@ -295,25 +290,28 @@ class multi_column_vectorizer:
         if col_names is None:
             col_names=self.col_names
         X_arrays=[]
+        
         for name in col_names:
             if not name in self.col_names:
-                raise Exception(f"No vectorizer for column {name}")
+                raise Exception(f"No vectorizer for column {name} initialized")
             elif not name in df.columns:
                 raise Exception(f"No column named {name} in dataframe")
             
+            # Apply vectorization
             corpus=list(df[name])
             x=self.vectorizers[name].transform(corpus)
             
             #normalize
-            if not self.norm_ord is None:
-                x=lp_normalize(x, ord=self.norm_ord)
+            if not self.normalization is None:
+                ord=None if self.normalization=='l2' else 1 # Note that ord=None gives the l2-norm in lp_normalize
+                x=lp_normalize(x, ord=ord)
+                
             X_arrays.append(x)
         
         X=sp.hstack(X_arrays)
         
-            
         if not sparse:
-            X=X.toarray()
+            X=X.toarray() # convert to numpy
 
         return X
     
