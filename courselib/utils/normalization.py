@@ -32,7 +32,7 @@ def lp_normalize(X, ord=None):
     
     Paramters:
     X: np array or scipy sparse ndarray or matrix
-    ord: non-zero None|1|inf, default=None (L2 normalization); order of the norm (None=l2-norm, 1=l1-norm, inf=l\infty norm)
+    ord: non-zero None|1|inf, default=None (L2 normalization); order of the norm (None=l2-norm, 1=l1-norm, inf=l infty norm)
     
     Returns:
     X_normalized: np array or scipy sparse csr matrix (depending on type of X); rows of X normalized to ord-norm 1
